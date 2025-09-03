@@ -1,12 +1,12 @@
 package com.example.examen.repository;
 
-import com.example.examen.model.Usuario;
+import com.example.examen.model.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
-    Optional<Usuario> findByUsuCorreo(String correo);
+public interface TokenRepository extends JpaRepository<Token, Integer> {
+    Optional<Token> findByTokValor(String valor);
 }
