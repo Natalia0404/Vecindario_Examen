@@ -31,7 +31,7 @@ public class AvisoController {
         return avisoService.buscarAvisoPorId(id);
     }
 
-    // (a) Publicar un aviso
+    //  Publicar un aviso
     @PostMapping
     public Aviso guardarAviso(@RequestBody Aviso aviso) {
         Aviso guardado = avisoService.guardarAviso(aviso);
@@ -51,31 +51,31 @@ public class AvisoController {
         avisoService.eliminarAviso(id);
     }
 
-    // (b) Marcar un aviso como "atendido"
     @PutMapping("/{id}")
     public Aviso actualizarAviso(@PathVariable Integer id, @RequestBody Aviso aviso) {
         return avisoService.buscarAvisoPorId(id)
                 .map(a -> {
+                    // Actualizar campos básicos
                     a.setAviTitulo(aviso.getAviTitulo());
                     a.setAviDescripcion(aviso.getAviDescripcion());
-                    a.setAviCategoria(aviso.getAviCategoria());
+                    a.setUsuario(aviso.getUsuario());
 
-                    boolean estadoCambio = aviso.getAviEstado() != null &&
+                    // Detectar si hubo un cambio de estado
+                    boolean cambioEstado = aviso.getAviEstado() != null &&
                             !aviso.getAviEstado().equals(a.getAviEstado());
 
                     a.setAviEstado(aviso.getAviEstado());
-                    a.setUsuario(aviso.getUsuario());
 
                     Aviso actualizado = avisoService.guardarAviso(a);
 
-                    /*// Si el estado cambió a ATENDIDO, enviamos notificación
-                    if (estadoCambio && "ATENDIDO".equalsIgnoreCase(aviso.getAviEstado())) {
+                    // ✅ Enviar notificación solo si se cambió el estado a ATENDIDO
+                    if (cambioEstado && actualizado.getAviEstado() == Aviso.Estado.ATENDIDO) {
                         Usuario autor = actualizado.getUsuario();
                         if (autor != null) {
                             String mensaje = "Tu aviso \"" + actualizado.getAviTitulo() + "\" fue marcado como ATENDIDO.";
                             notificacionService.crear(mensaje, autor, actualizado);
                         }
-                    }*/
+                    }
 
                     return actualizado;
                 })
