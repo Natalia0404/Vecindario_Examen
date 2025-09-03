@@ -16,7 +16,7 @@ public class Comentario {
     private String comContenido;
 
     @Column(name = "com_fecha_publicacion", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime comFechaPublicacion = LocalDateTime.now();
+    private LocalDateTime comFechaPublicacion;
 
     // Relación con Usuario
     @ManyToOne
