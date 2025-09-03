@@ -1,5 +1,6 @@
 package com.example.examen.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -22,12 +23,14 @@ public class Comentario {
 
     // Relación con Usuario
     @ManyToOne
-    @JoinColumn(name = "usu_id")
+    @JoinColumn(name = "usu_id", nullable = false)
+    @JsonIgnoreProperties({"avisos","comentarios","usuPassword"}) // evita recursión
     private Usuario usuario;
 
     // Relación con Aviso
     @ManyToOne
-    @JoinColumn(name = "avi_id")
+    @JoinColumn(name = "avi_id", nullable = false)
+    @JsonIgnoreProperties({"comentarios", "usuario"}) // evita recursión
     private Aviso aviso;
 
     // -------------------------

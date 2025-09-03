@@ -26,7 +26,7 @@ public class Notificacion {
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "avi_id")
+    @JoinColumn(name = "avi_id", nullable = false)
     private Aviso aviso;
 
     public Notificacion() { }

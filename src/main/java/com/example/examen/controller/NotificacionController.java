@@ -50,11 +50,9 @@ public class NotificacionController {
         Usuario usuario = usuarioRepository.findById(usuId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + usuId));
 
-        // Buscar aviso (opcional)
-        Aviso aviso = (aviId != null)
-                ? avisoRepository.findById(aviId)
-                .orElseThrow(() -> new RuntimeException("Aviso no encontrado: " + aviId))
-                : null;
+        // Buscar aviso (obligatorio)
+        Aviso aviso = avisoRepository.findById(aviId)
+                .orElseThrow(() -> new RuntimeException("Aviso no encontrado: " + aviId));
 
         // Delegar la creación al servicio
         return notificacionService.crear(mensaje, usuario, aviso);
