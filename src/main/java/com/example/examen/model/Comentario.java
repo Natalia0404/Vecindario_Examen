@@ -1,6 +1,8 @@
 package com.example.examen.model;
 
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
+
 import java.time.LocalDateTime;
 
 @Entity

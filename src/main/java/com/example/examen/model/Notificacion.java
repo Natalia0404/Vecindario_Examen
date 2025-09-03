@@ -37,21 +37,44 @@ public class Notificacion {
         this.aviso = aviso;
     }
 
-    public Integer getNotId() { return notId; }
-    public void setNotId(Integer notId) { this.notId = notId; }
+    public Integer getNotId() {
+        return notId;
+    }
+    public void setNotId(Integer notId) {
+        this.notId = notId;
+    }
 
-    public String getNotMensaje() { return notMensaje; }
-    public void setNotMensaje(String notMensaje) { this.notMensaje = notMensaje; }
+    public String getNotMensaje() {
+        return notMensaje;
+    }
+    public void setNotMensaje(String notMensaje) {
+        this.notMensaje = notMensaje;
+    }
 
-    public LocalDateTime getNotFecha() { return notFecha; }
-    public void setNotFecha(LocalDateTime notFecha) { this.notFecha = notFecha; }
+    public LocalDateTime getNotFecha() {
+        return notFecha;
+    }
+    public void setNotFecha(LocalDateTime notFecha) {
+        this.notFecha = notFecha;
+    }
 
-    public Boolean getNotLeida() { return notLeida; }
-    public void setNotLeida(Boolean notLeida) { this.notLeida = notLeida; }
+    public Boolean getNotLeida() {
+        return notLeida;
+    }
+    public void setNotLeida(Boolean notLeida) {
+        this.notLeida = notLeida;
+    }
 
-    public Usuario getUsuario() { return usuario; }
-    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+    public Usuario getUsuario() { return usuario;
+    }
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
-    public Aviso getAviso() { return aviso; }
-    public void setAviso(Aviso aviso) { this.aviso = aviso; }
+    public Aviso getAviso() {
+        return aviso;
+    }
+    public void setAviso(Aviso aviso) {
+        this.aviso = aviso;
+    }
 }
