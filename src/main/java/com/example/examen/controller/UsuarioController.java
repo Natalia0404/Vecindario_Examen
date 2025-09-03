@@ -2,13 +2,14 @@ package com.example.examen.controller;
 
 import com.example.examen.model.Usuario;
 import com.example.examen.service.UsuarioService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/usuarios") // Prefijo /api añadido
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -18,36 +19,40 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public List<Usuario> listarUsuarios() {
-        return usuarioService.listarUsuarios();
+    public ResponseEntity<List<Usuario>> getAllUsuarios() {
+        return new ResponseEntity<>(usuarioService.getAllUsuarios(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public Optional<Usuario> buscarUsuario(@PathVariable Integer id) {
-        return usuarioService.buscarUsuarioPorId(id);
+    public ResponseEntity<Usuario> getUsuarioById(@PathVariable Integer id) {
+        return usuarioService.getUsuarioById(id)
+                .map(usuario -> new ResponseEntity<>(usuario, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping
-    public Usuario guardarUsuario(@RequestBody Usuario usuario) {
-        return usuarioService.guardarUsuario(usuario);
-    }
-
-    @DeleteMapping("/{id}")
-    public void eliminarUsuario(@PathVariable Integer id) {
-        usuarioService.eliminarUsuario(id);
+    @PostMapping("/registro") // Ruta más específica para crear
+    public ResponseEntity<Usuario> createUsuario(@RequestBody Usuario usuario) {
+        Usuario nuevoUsuario = usuarioService.createUsuario(usuario);
+        return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public Usuario actualizarUsuario(@PathVariable Integer id, @RequestBody Usuario usuario) {
-        return usuarioService.buscarUsuarioPorId(id)
-                .map(u -> {
-                    u.setUsuNombre(usuario.getUsuNombre());
-                    u.setUsuCorreo(usuario.getUsuCorreo());
-                    u.setUsuPassword(usuario.getUsuPassword());
-                    u.setUsuDireccion(usuario.getUsuDireccion());
-                    u.setUsuActivo(usuario.getUsuActivo());
-                    return usuarioService.guardarUsuario(u);
-                })
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id " + id));
+    public ResponseEntity<Usuario> updateUsuario(@PathVariable Integer id, @RequestBody Usuario usuarioDetails) {
+        Usuario usuarioActualizado = usuarioService.updateUsuario(id, usuarioDetails);
+        if (usuarioActualizado != null) {
+            return new ResponseEntity<>(usuarioActualizado, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUsuario(@PathVariable Integer id) {
+        boolean fueEliminado = usuarioService.deleteUsuario(id);
+        if (fueEliminado) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204: Éxito, sin contenido que devolver
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404: No encontrado
+        }
     }
 }
