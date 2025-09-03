@@ -23,9 +23,10 @@ public class Aviso {
     @Column(name = "avi_fecha_publicacion", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime aviFechaPublicacion = LocalDateTime.now();
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "avi_categoria", nullable = false)
-    private Categoria aviCategoria;
+    // 🔹 Relación con Categoría
+    @ManyToOne
+    @JoinColumn(name = "cat_id", nullable = false)
+    private Categoria categoria;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "avi_estado", nullable = false)
@@ -41,12 +42,8 @@ public class Aviso {
     private List<Comentario> comentarios;
 
     // -------------------------
-    // ENUMS
+    // ENUM
     // -------------------------
-    public enum Categoria {
-        AYUDA, ALERTAS, COMPRAS, REUNIONES, MASCOTAS, EVENTOS
-    }
-
     public enum Estado {
         PUBLICADO, ATENDIDO
     }
@@ -63,7 +60,6 @@ public class Aviso {
         this.aviTitulo = aviTitulo;
         this.aviDescripcion = aviDescripcion;
         this.aviFechaPublicacion = aviFechaPublicacion;
-        this.aviCategoria = aviCategoria;
         this.aviEstado = aviEstado;
         this.usuario = usuario;
     }
@@ -101,14 +97,6 @@ public class Aviso {
 
     public void setAviFechaPublicacion(LocalDateTime aviFechaPublicacion) {
         this.aviFechaPublicacion = aviFechaPublicacion;
-    }
-
-    public Categoria getAviCategoria() {
-        return aviCategoria;
-    }
-
-    public void setAviCategoria(Categoria aviCategoria) {
-        this.aviCategoria = aviCategoria;
     }
 
     public Estado getAviEstado() {
