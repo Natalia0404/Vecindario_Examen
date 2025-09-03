@@ -1,6 +1,9 @@
 package com.example.examen.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,16 +19,18 @@ public class Comentario {
     private String comContenido;
 
     @Column(name = "com_fecha_publicacion", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime comFechaPublicacion = LocalDateTime.now();
+    private LocalDateTime comFechaPublicacion;
 
     // Relación con Usuario
     @ManyToOne
-    @JoinColumn(name = "usu_id")
+    @JoinColumn(name = "usu_id", nullable = false)
+    @JsonIgnoreProperties({"avisos","comentarios","usuPassword"}) // evita recursión
     private Usuario usuario;
 
     // Relación con Aviso
     @ManyToOne
-    @JoinColumn(name = "avi_id")
+    @JoinColumn(name = "avi_id", nullable = false)
+    @JsonIgnoreProperties({"comentarios", "usuario"}) // evita recursión
     private Aviso aviso;
 
     // -------------------------
