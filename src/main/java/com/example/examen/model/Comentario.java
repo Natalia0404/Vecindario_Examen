@@ -32,13 +32,13 @@ public class Comentario {
     // Relación con Usuario
     @ManyToOne
     @JoinColumn(name = "usu_id", nullable = false)
-
+    @JsonIgnoreProperties({"avisos", "comentarios"})
     private Usuario usuario;
 
     // Relación con Aviso
     @ManyToOne
     @JoinColumn(name = "avi_id", nullable = false)
-
+    @JsonIgnoreProperties({"usuario", "comentarios"})
     private Aviso aviso;
 
     // -------------------------
