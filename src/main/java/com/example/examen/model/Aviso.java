@@ -1,18 +1,9 @@
 package com.example.examen.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
-
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "aviId"
-)
 @Entity
 @Table(name = "avisos")
 public class Aviso {
@@ -31,52 +22,35 @@ public class Aviso {
     @Column(name = "avi_fecha_publicacion", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime aviFechaPublicacion = LocalDateTime.now();
 
-    // 🔹 Relación con Categoría
-    @ManyToOne
-    @JoinColumn(name = "cat_id", nullable = false)
-    private Categoria categoria;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "avi_estado", nullable = false)
     private Estado aviEstado = Estado.PUBLICADO;
 
-    // Relación con Usuario
-    @ManyToOne
-    @JoinColumn(name = "usu_id")
-
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "usu_id", nullable = false)
+    @JsonIgnoreProperties({"avisos", "hibernateLazyInitializer", "handler"})
     private Usuario usuario;
 
-    // Relación con Comentarios
-    @OneToMany(mappedBy = "aviso", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "cat_id", nullable = false)
+    @JsonIgnoreProperties({"avisos", "hibernateLazyInitializer", "handler"})
+    private Categoria categoria;
 
-    private List<Comentario> comentarios;
-
-    // -------------------------
-    // ENUM
-    // -------------------------
-    public enum Estado {
-        PUBLICADO, ATENDIDO
-    }
-
-    // -------------------------
-    // Constructores
-    // -------------------------
-    public Aviso() {
-    }
+    // ====== Constructores ======
+    public Aviso() {}
 
     public Aviso(Integer aviId, String aviTitulo, String aviDescripcion, LocalDateTime aviFechaPublicacion,
-                 Categoria aviCategoria, Estado aviEstado, Usuario usuario) {
+                 Estado aviEstado, Usuario usuario, Categoria categoria) {
         this.aviId = aviId;
         this.aviTitulo = aviTitulo;
         this.aviDescripcion = aviDescripcion;
         this.aviFechaPublicacion = aviFechaPublicacion;
         this.aviEstado = aviEstado;
         this.usuario = usuario;
+        this.categoria = categoria;
     }
 
-    // -------------------------
-    // Getters y Setters
-    // -------------------------
+    // ====== Getters/Setters ======
     public Integer getAviId() {
         return aviId;
     }
@@ -123,14 +97,6 @@ public class Aviso {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-    }
-
-    public List<Comentario> getComentarios() {
-        return comentarios;
-    }
-
-    public void setComentarios(List<Comentario> comentarios) {
-        this.comentarios = comentarios;
     }
 
     public Categoria getCategoria() {
