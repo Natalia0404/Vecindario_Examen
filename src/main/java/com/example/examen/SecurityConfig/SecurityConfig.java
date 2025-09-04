@@ -2,6 +2,9 @@ package com.example.examen.SecurityConfig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,32 +24,38 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // 1. Desactivamos la protección CSRF, que no es necesaria para APIs REST sin estado.
+                // API REST sin sesiones
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // CSRF off (Postman no manda CSRF token)
                 .csrf(csrf -> csrf.disable())
-
-                // 2. Definimos las reglas de autorización para las peticiones HTTP.
+                // CORS por defecto (si pruebas desde navegador; no afecta Postman)
+                .cors(Customizer.withDefaults())
+                // Autorización por rutas
                 .authorizeHttpRequests(auth -> auth
-                        // 2a. Estas son las "Puertas Abiertas": cualquiera puede acceder a estas rutas.
-                        .requestMatchers("/api/auth/**", "/api/usuarios/registro").permitAll()
+                        // Endpoints públicos
+                        .requestMatchers("/**").permitAll()
 
-                        // 2b. Esta es la regla "Solo para miembros": cualquier otra petición requiere autenticación.
                         .anyRequest().authenticated()
+
+
                 )
-
-                // 3. Le decimos a Spring que no cree ni gestione sesiones. Cada petición es independiente.
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // 4. Le damos la instrucción más importante: "Usa nuestro bouncer personalizado (JwtAuthFilter)
-                //    antes de que el bouncer por defecto de Spring haga su trabajo".
+                // Inserta tu filtro JWT antes del auth por usuario/clave
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    // Opcional: útil si haces autenticación clásica en algún endpoint
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
+    // Recomendado para hashear contraseñas
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
