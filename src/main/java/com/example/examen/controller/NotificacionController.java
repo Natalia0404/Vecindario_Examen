@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@RestController // Indica que esta clase es un controlador REST
-@RequestMapping("/notificaciones") // Prefijo común para todos los endpoints
+@RestController
+@RequestMapping("/notificaciones")
 public class NotificacionController {
 
     // Inyección de dependencias

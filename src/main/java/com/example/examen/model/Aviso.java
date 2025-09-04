@@ -1,10 +1,18 @@
 package com.example.examen.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "aviId"
+)
 @Entity
 @Table(name = "avisos")
 public class Aviso {
@@ -35,10 +43,12 @@ public class Aviso {
     // Relación con Usuario
     @ManyToOne
     @JoinColumn(name = "usu_id")
+
     private Usuario usuario;
 
     // Relación con Comentarios
     @OneToMany(mappedBy = "aviso", cascade = CascadeType.ALL, orphanRemoval = true)
+
     private List<Comentario> comentarios;
 
     // -------------------------
@@ -121,5 +131,13 @@ public class Aviso {
 
     public void setComentarios(List<Comentario> comentarios) {
         this.comentarios = comentarios;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 }
