@@ -1,8 +1,16 @@
 package com.example.examen.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import java.util.List;
 
+
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "usuId"
+)
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -29,10 +37,12 @@ public class Usuario {
 
     // Relación con Avisos
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+
     private List<Aviso> avisos;
 
     // Relación con Comentarios
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+
     private List<Comentario> comentarios;
 
     // -------------------------

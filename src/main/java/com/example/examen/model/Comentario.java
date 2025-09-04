@@ -1,11 +1,19 @@
 package com.example.examen.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDateTime;
 
+
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "comId"
+)
 @Entity
 @Table(name = "comentarios")
 public class Comentario {
@@ -24,13 +32,13 @@ public class Comentario {
     // Relación con Usuario
     @ManyToOne
     @JoinColumn(name = "usu_id", nullable = false)
-    @JsonIgnoreProperties({"avisos","comentarios","usuPassword"}) // evita recursión
+
     private Usuario usuario;
 
     // Relación con Aviso
     @ManyToOne
     @JoinColumn(name = "avi_id", nullable = false)
-    @JsonIgnoreProperties({"comentarios", "usuario"}) // evita recursión
+
     private Aviso aviso;
 
     // -------------------------
